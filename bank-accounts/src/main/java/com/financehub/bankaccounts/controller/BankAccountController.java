@@ -1,6 +1,8 @@
 package com.financehub.bankaccounts.controller;
 
 import com.financehub.bankaccounts.service.BankAccountService;
+import com.financehub.core.dto.bankaccount.BankAccountRegisterDTO;
+import com.financehub.core.dto.bankaccount.BankAccountResponseDTO;
 import com.financehub.core.model.BankAccount;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,24 +20,24 @@ public class BankAccountController {
     private final BankAccountService bankAccountService;
 
     @PostMapping
-    public ResponseEntity<BankAccount.Response> createBankAccount(@RequestBody BankAccount.Create bankAccountDTO) {
+    public ResponseEntity<BankAccountResponseDTO> createBankAccount(@RequestBody BankAccountRegisterDTO bankAccountDTO) {
         BankAccount account = bankAccountService.createBankAccount(bankAccountDTO);
 
-        return ResponseEntity.ok(new BankAccount.Response(account));
+        return ResponseEntity.ok(new BankAccountResponseDTO(account));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BankAccount.Response> getBankAccountById(@PathVariable("id") String id) {
+    public ResponseEntity<BankAccountResponseDTO> getBankAccountById(@PathVariable("id") String id) {
         BankAccount account = bankAccountService.getBankAccountById(UUID.fromString(id));
 
-        return ResponseEntity.ok(new BankAccount.Response(account));
+        return ResponseEntity.ok(new BankAccountResponseDTO(account));
     }
 
     @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<BankAccount.Response>> listBankAccountsByOwnerId(@PathVariable("ownerId") String ownerId) {
-        List<BankAccount.Response> accounts = bankAccountService.listBankAccountsByOwnerId(UUID.fromString(ownerId))
+    public ResponseEntity<List<BankAccountResponseDTO>> listBankAccountsByOwnerId(@PathVariable("ownerId") String ownerId) {
+        List<BankAccountResponseDTO> accounts = bankAccountService.listBankAccountsByOwnerId(UUID.fromString(ownerId))
                 .stream()
-                .map(BankAccount.Response::new)
+                .map(BankAccountResponseDTO::new)
                 .toList();
 
         return ResponseEntity.ok(accounts);

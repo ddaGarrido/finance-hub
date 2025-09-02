@@ -1,10 +1,12 @@
 package com.financehub.core.service;
 
+import com.financehub.core.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,10 @@ import java.util.function.Function;
 @Service
 public class JwtsService {
 
-    private static final String SECRET_KEY = "7B3AE29342DEDE9F57253A4F151967B3AE29342DEDE9F57253A4F151967B3AE29342DEDE9F57253A4F151967";
+    @Value("${application.security.jwt.secret-key}")
+    private String jwtSecretKey;
+    @Value("${application.security.jwt.expiration}")
+    private long jwtExpiration;
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
@@ -36,23 +41,30 @@ public class JwtsService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
+    }
+
     public String extractRole(String token) {
         return extractClaim(token, claims -> claims.get("role", String.class));
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return createToken(new HashMap<>(), userDetails.getUsername());
+    public String generateToken(User user) {
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("role", user.getRole());
+        claims.put("userId", user.getId().toString());
+
+        return createToken(claims, user.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
         long now = System.currentTimeMillis();
-        long validity = 1000 * 60 * 60; // 1 hour validity
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + validity))
+                .setExpiration(new Date(now + jwtExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -71,7 +83,7 @@ public class JwtsService {
     }
 
     private Key getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

@@ -1,5 +1,6 @@
 package com.financehub.core.service;
 
+import com.financehub.core.dto.user.UserRegisterDTO;
 import com.financehub.core.model.BankAccount;
 import com.financehub.core.model.User;
 import com.financehub.core.repository.UserRepository;
@@ -21,54 +22,51 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User.ResponseUserDTO createUser(User.CreateUserDTO userDTO) {
+    public User createUser(UserRegisterDTO userDTO) {
         // Check if email already exists
-        userRepository.findByEmail(userDTO.email()).ifPresent(u -> {
+        userRepository.findByEmail(userDTO.getEmail()).ifPresent(u -> {
             throw new IllegalArgumentException("Email already in use");
         });
 
-        String hashedPassword = passwordEncoder.encode(userDTO.password());
+        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
         List<BankAccount> bankAccounts = List.of(); // Initialize with empty list
         User newUser = new User(
             UUID.randomUUID(),
-            userDTO.username(),
+            userDTO.getUsername(),
             hashedPassword,
-            userDTO.email(),
-            userDTO.name(),
-            userDTO.role(),
+            userDTO.getEmail(),
+            userDTO.getName(),
+            userDTO.getRole(),
             bankAccounts
         );
 
         userRepository.save(newUser);
 
-        return new User.ResponseUserDTO(newUser);
+        return newUser;
     }
 
 
-    public List<User.ResponseUserListDTO> listUsers() {
-        List<User.ResponseUserDTO> users = userRepository.findAll().stream().map(User.ResponseUserDTO::new).toList();
-        return users.stream()
-                .map(user -> new User.ResponseUserListDTO(user.id(), user.username(), user.email(), user.name(), user.role()))
-                .toList();
+    public List<User> listUsers() {
+        return userRepository.findAll().stream().toList();
     }
 
-    public User.ResponseUserDTO getUserById(UUID id) {
+    public User getUserById(String id) {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
-        return new User.ResponseUserDTO(user.get());
+        return user.get();
     }
 
-    public User.ResponseUserDTO getUserByUsername(String username) {
+    public User getUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
 
         if (user.isEmpty()) {
             throw new IllegalArgumentException("User not found");
         }
 
-        return new User.ResponseUserDTO(user.get());
+        return user.get();
     }
 }

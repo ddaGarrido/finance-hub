@@ -1,13 +1,15 @@
 package com.financehub.bankaccounts.service;
 
 import com.financehub.bankaccounts.repository.BankAccountRepository;
+import com.financehub.core.dto.bankaccount.BankAccountRegisterDTO;
 import com.financehub.core.model.BankAccount;
+import com.financehub.core.model.User;
 import com.financehub.core.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,21 +19,20 @@ public class BankAccountService {
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository userRepository;
 
-    public BankAccount createBankAccount(BankAccount.Create bankAccountDTO) {
-        // Check if owner exists
-        userRepository.findById(bankAccountDTO.ownerId()).orElseThrow(() -> new IllegalArgumentException("Owner not found"));
+    public BankAccount createBankAccount(BankAccountRegisterDTO bankAccountDTO) {
+        Optional<User> owner = userRepository.findById(bankAccountDTO.getOwnerId());
 
-        BankAccount newAccount = new BankAccount();
-        newAccount.setId(UUID.randomUUID());
-        newAccount.setOwnerId(UUID.fromString(bankAccountDTO.ownerId()));
-        newAccount.setAccountName(bankAccountDTO.accountName());
-        newAccount.setAccountNumber("00012345"); // Placeholder, should be generated or provided
-        newAccount.setAccountRouting("11000000"); // Placeholder, should be generated or provided
-        newAccount.setBankName("FinanceHub Bank"); // Placeholder, could be dynamic
-        newAccount.setBalance(BigDecimal.ZERO);
-        newAccount.setCurrency("BRL");
+        if (owner.isEmpty()) {
+            throw new IllegalArgumentException("Owner not found");
+        }
+
+        BankAccount newAccount = bankAccountDTO.toEntity();
+        List<BankAccount> existingAccounts = bankAccountRepository.findByOwnerId(owner.get().getId());
+        existingAccounts.add(newAccount);
+        owner.get().setBankAccounts(existingAccounts);
 
         bankAccountRepository.save(newAccount);
+        userRepository.save(owner.get());
 
         return newAccount;
     }
