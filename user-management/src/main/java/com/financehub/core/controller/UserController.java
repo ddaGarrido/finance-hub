@@ -4,6 +4,7 @@ import com.financehub.core.dto.user.UserRegisterDTO;
 import com.financehub.core.dto.user.UserResponseDTO;
 import com.financehub.core.model.User;
 import com.financehub.core.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class UserController {
     private final UserService service;
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody UserRegisterDTO createUserDTO) {
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRegisterDTO createUserDTO) {
         User newUser = service.createUser(createUserDTO);
         UserResponseDTO response = new UserResponseDTO(
                 newUser.getId().toString(),

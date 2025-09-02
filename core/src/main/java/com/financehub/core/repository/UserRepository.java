@@ -29,6 +29,11 @@ public class UserRepository {
         return Optional.ofNullable(userDatabase.get(id));
     }
     public Optional<User> findById(String id) {
+        try {
+            UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(userDatabase.get(UUID.fromString(id)));
     }
     public Optional<User> findByEmail(String email) {
