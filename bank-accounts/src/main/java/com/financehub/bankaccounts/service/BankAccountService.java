@@ -2,6 +2,7 @@ package com.financehub.bankaccounts.service;
 
 import com.financehub.bankaccounts.repository.BankAccountRepository;
 import com.financehub.core.dto.bankaccount.BankAccountRegisterDTO;
+import com.financehub.core.error.NotFoundException;
 import com.financehub.core.model.BankAccount;
 import com.financehub.core.model.User;
 import com.financehub.core.repository.UserRepository;
@@ -23,7 +24,7 @@ public class BankAccountService {
         Optional<User> owner = userRepository.findById(bankAccountDTO.getOwnerId());
 
         if (owner.isEmpty()) {
-            throw new IllegalArgumentException("Owner not found");
+            throw new NotFoundException("Owner not found");
         }
 
         BankAccount newAccount = bankAccountDTO.toEntity();
@@ -38,7 +39,7 @@ public class BankAccountService {
     }
 
     public BankAccount getBankAccountById(UUID id) {
-        return bankAccountRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Bank account not found"));
+        return bankAccountRepository.findById(id).orElseThrow(() -> new NotFoundException("Bank account not found"));
     }
 
     public List<BankAccount> listBankAccounts() {
@@ -47,7 +48,7 @@ public class BankAccountService {
 
     public List<BankAccount> listBankAccountsByOwnerId(UUID ownerId) {
         // Check if owner exists
-        userRepository.findById(ownerId).orElseThrow(() -> new IllegalArgumentException("Owner not found"));
+        userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("Owner not found"));
         return bankAccountRepository.findByOwnerId(ownerId);
     }
 }

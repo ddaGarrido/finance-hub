@@ -4,8 +4,8 @@ import com.financehub.bankaccounts.service.BankAccountService;
 import com.financehub.core.dto.bankaccount.BankAccountRegisterDTO;
 import com.financehub.core.dto.bankaccount.BankAccountResponseDTO;
 import com.financehub.core.model.BankAccount;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class BankAccountController {
     private final BankAccountService bankAccountService;
 
     @PostMapping
-    public ResponseEntity<BankAccountResponseDTO> createBankAccount(@RequestBody BankAccountRegisterDTO bankAccountDTO) {
+    public ResponseEntity<BankAccountResponseDTO> createBankAccount(@Valid @RequestBody BankAccountRegisterDTO bankAccountDTO) {
         BankAccount account = bankAccountService.createBankAccount(bankAccountDTO);
 
         return ResponseEntity.ok(new BankAccountResponseDTO(account));

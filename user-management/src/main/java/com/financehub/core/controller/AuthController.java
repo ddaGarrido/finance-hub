@@ -7,6 +7,7 @@ import com.financehub.core.dto.user.UserResponseDTO;
 import com.financehub.core.model.User;
 import com.financehub.core.service.JwtsService;
 import com.financehub.core.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ public class AuthController {
     private final JwtsService jwtsService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDTO> register(@RequestBody UserRegisterDTO registerRequestDTO) {
+    public ResponseEntity<AuthResponseDTO> register(@Valid @RequestBody UserRegisterDTO registerRequestDTO) {
         User user = userService.createUser(registerRequestDTO);
         AuthRequestDTO loginRequestDTO = new AuthRequestDTO(user.getUsername(), registerRequestDTO.getPassword());
 
@@ -37,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthRequestDTO loginRequestDTO) {
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody AuthRequestDTO loginRequestDTO) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
         );

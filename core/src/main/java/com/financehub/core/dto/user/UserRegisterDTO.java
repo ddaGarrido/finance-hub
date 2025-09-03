@@ -1,6 +1,5 @@
 package com.financehub.core.dto.user;
 
-
 import com.financehub.core.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
