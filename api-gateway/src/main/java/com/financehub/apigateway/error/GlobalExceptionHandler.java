@@ -2,6 +2,7 @@ package com.financehub.apigateway.error;
 
 import com.financehub.core.error.ConflictException;
 import com.financehub.core.error.NotFoundException;
+import com.financehub.core.error.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +38,11 @@ public class GlobalExceptionHandler {
                 ));
         ApiErrorDTO error = ApiErrorDTO.of(HttpStatus.BAD_REQUEST, "Validation failed", request.getRequestURI(), validationErrors);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ApiErrorDTO> handleUnauthorizedException(UnauthorizedException ex, HttpServletRequest request) {
+        ApiErrorDTO error = ApiErrorDTO.of(HttpStatus.UNAUTHORIZED, ex.getMessage(), request.getRequestURI(), ex.getDetails());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 }

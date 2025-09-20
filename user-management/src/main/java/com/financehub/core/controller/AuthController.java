@@ -4,6 +4,7 @@ import com.financehub.core.dto.auth.AuthRequestDTO;
 import com.financehub.core.dto.auth.AuthResponseDTO;
 import com.financehub.core.dto.user.UserRegisterDTO;
 import com.financehub.core.dto.user.UserResponseDTO;
+import com.financehub.core.error.UnauthorizedException;
 import com.financehub.core.model.User;
 import com.financehub.core.service.JwtsService;
 import com.financehub.core.service.UserService;
@@ -39,9 +40,13 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody AuthRequestDTO loginRequestDTO) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
+            );
+        } catch (Exception e) {
+            throw new UnauthorizedException("Invalid username or password");
+        }
 
         User user = userService.getUserByUsername(loginRequestDTO.getUsername());
         final String jwtToken = jwtsService.generateToken(user);
