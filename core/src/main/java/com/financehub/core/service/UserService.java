@@ -6,6 +6,8 @@ import com.financehub.core.error.NotFoundException;
 import com.financehub.core.model.BankAccount;
 import com.financehub.core.model.User;
 import com.financehub.core.repository.UserRepository;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,33 +16,31 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
+    @Transactional
     public User createUser(UserRegisterDTO userDTO) {
         // Check if email already exists
-        userRepository.findByEmail(userDTO.getEmail()).ifPresent(u -> {
+        if (userRepository.existsByUsername(userDTO.getUsername())) {
+            throw new ConflictException("Username already in use");
+        }
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new ConflictException("Email already in use");
-        });
+        }
 
         String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
         List<BankAccount> bankAccounts = List.of(); // Initialize with empty list
-        User newUser = new User(
-            UUID.randomUUID(),
-            userDTO.getUsername(),
-            hashedPassword,
-            userDTO.getEmail(),
-            userDTO.getName(),
-            userDTO.getRole(),
-            bankAccounts
-        );
+        User newUser = new User();
+        newUser.setId(UUID.randomUUID());
+        newUser.setUsername(userDTO.getUsername());
+        newUser.setPassword(hashedPassword);
+        newUser.setEmail(userDTO.getEmail());
+        newUser.setName(userDTO.getName());
+        newUser.setRole(userDTO.getRole());
 
         userRepository.save(newUser);
 
@@ -53,7 +53,7 @@ public class UserService {
     }
 
     public User getUserById(String id) {
-        Optional<User> user = userRepository.findById(id);
+        Optional<User> user = userRepository.findById(UUID.fromString(id));
 
         if (user.isEmpty()) {
             throw new NotFoundException("User not found");

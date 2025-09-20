@@ -1,6 +1,5 @@
 package com.financehub.core.dto.user;
 
-import com.financehub.core.model.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -26,8 +25,4 @@ public class UserRegisterDTO {
 
     @NotBlank(message = "Role is required")
     public String role;
-
-    public User toEntity() {
-        return new User(null, this.username, this.password, this.email, this.name, this.role, null);
-    }
 }

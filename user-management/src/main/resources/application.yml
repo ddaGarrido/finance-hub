@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${PG_HOST:localhost}:${PG_PORT:5432}/${PG_DB:financehub}
+    username: ${PG_USER:financehub}
+    password: ${PG_PASSWORD:financehub}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: user_mgmt
+  flyway:
+    enabled: true
+    schemas: user_mgmt
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+server:
+  port: 8082

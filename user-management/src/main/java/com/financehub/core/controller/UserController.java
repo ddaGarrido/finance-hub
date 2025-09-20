@@ -27,8 +27,7 @@ public class UserController {
                 newUser.getUsername(),
                 newUser.getEmail(),
                 newUser.getName(),
-                newUser.getRole(),
-                newUser.getBankAccounts()
+                newUser.getRole()
         );
 
         return ResponseEntity.status(201).body(response);

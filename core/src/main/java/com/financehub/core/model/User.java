@@ -1,31 +1,31 @@
 package com.financehub.core.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 @Entity
-@Table(name = "app_users")
+@Table(name = "users", schema = "user_mgmt")
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
-public class User {
+public class User extends DBEntity {
 
-    @Id
-    private UUID id;
-
+    @Column(nullable = false, unique = true, length = 60)
     private String username;
-    private String password; //TODO hash this
-    private String email;
-    private String name;
-    private String role;
 
-    private List<BankAccount> bankAccounts;
+    @Column(nullable = false, length = 120)
+    private String password; //TODO hash this
+
+    @Column(nullable = false, unique = true, length = 120)
+    private String email;
+
+    @Column(nullable = false, length = 120)
+    private String name;
+
+    @Column(nullable = false, length = 40)
+    private String role;
 }

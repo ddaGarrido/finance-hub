@@ -21,7 +21,7 @@ public class BankAccountService {
     private final UserRepository userRepository;
 
     public BankAccount createBankAccount(BankAccountRegisterDTO bankAccountDTO) {
-        Optional<User> owner = userRepository.findById(bankAccountDTO.getOwnerId());
+        Optional<User> owner = userRepository.findById(UUID.fromString(bankAccountDTO.getOwnerId()));
 
         if (owner.isEmpty()) {
             throw new NotFoundException("Owner not found");
@@ -30,10 +30,8 @@ public class BankAccountService {
         BankAccount newAccount = bankAccountDTO.toEntity();
         List<BankAccount> existingAccounts = bankAccountRepository.findByOwnerId(owner.get().getId());
         existingAccounts.add(newAccount);
-        owner.get().setBankAccounts(existingAccounts);
 
         bankAccountRepository.save(newAccount);
-        userRepository.save(owner.get());
 
         return newAccount;
     }
