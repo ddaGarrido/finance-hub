@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: optional:classpath:application-base.yml
+  flyway:
+    enabled: false
+application:
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET}
+      expiration: ${JWT_EXPIRATION}
+server:
+  port: ${HTTP_PORT}
+

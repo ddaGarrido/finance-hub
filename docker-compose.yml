@@ -1,13 +1,13 @@
 services:
   postgres:
     image: postgres:15
-    container_name: fh-postgres
+    container_name: ${PG_CONTAINER}
     environment:
-      POSTGRES_USER: financehub
-      POSTGRES_PASSWORD: financehub
-      POSTGRES_DB: financehub
+      POSTGRES_DB: ${PG_DB}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${PG_PORT}:${PG_PORT}"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -18,9 +18,9 @@ services:
 
   adminer:
     image: adminer:latest
-    container_name: fh-adminer
+    container_name: ${ADMINER_CONTAINER}
     ports:
-      - "8081:8080"
+      - "${ADMINER_PORT}:${HTTP_PORT}"
     depends_on:
       postgres:
         condition: service_healthy
