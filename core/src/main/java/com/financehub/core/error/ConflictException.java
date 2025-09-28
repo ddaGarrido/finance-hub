@@ -6,7 +6,7 @@ import java.util.Map;
 
 @Getter
 public class ConflictException extends RuntimeException {
-    private final Map<String, Object> details;
+    private final transient Map<String, Object> details;
 
     public ConflictException(String message) {
         super(message);

@@ -18,7 +18,7 @@ public class User extends DBEntity {
     private String username;
 
     @Column(nullable = false, length = 120)
-    private String password; //TODO hash this
+    private String password;
 
     @Column(nullable = false, unique = true, length = 120)
     private String email;

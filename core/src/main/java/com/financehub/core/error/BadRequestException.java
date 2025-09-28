@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class BadRequestException extends RuntimeException {
-    private final Object details;
+    private final transient Object details;
 
     public BadRequestException(String message) {
         super(message);

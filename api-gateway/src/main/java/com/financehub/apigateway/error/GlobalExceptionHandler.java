@@ -6,6 +6,7 @@ import com.financehub.core.error.UnauthorizedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,8 +33,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiErrorDTO> handleValidationException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, Object> validationErrors = ex.getBindingResult().getFieldErrors().stream()
                 .collect(Collectors.toMap(
-                        fieldError -> fieldError.getField(),
-                        fieldError -> fieldError.getDefaultMessage(),
+                        FieldError::getField,
+                        fieldError -> fieldError.getDefaultMessage() != null ? fieldError.getDefaultMessage() : "Invalid value",
                         (existing, replacement) -> existing // In case of duplicate keys, keep the existing message
                 ));
         ApiErrorDTO error = ApiErrorDTO.of(HttpStatus.BAD_REQUEST, "Validation failed", request.getRequestURI(), validationErrors);

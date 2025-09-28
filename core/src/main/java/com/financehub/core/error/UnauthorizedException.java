@@ -6,7 +6,7 @@ import java.util.Map;
 
 @Getter
 public class UnauthorizedException extends RuntimeException {
-    private final Map<String, Object> details;
+    private final transient Map<String, Object> details;
 
     public UnauthorizedException(String message) {
         super(message);
