@@ -33,9 +33,9 @@ public class BankAccountController {
         return ResponseEntity.ok(new BankAccountResponseDTO(account));
     }
 
-    @GetMapping("/owner/{ownerId}")
-    public ResponseEntity<List<BankAccountResponseDTO>> listBankAccountsByOwnerId(@PathVariable("ownerId") String ownerId) {
-        List<BankAccountResponseDTO> accounts = bankAccountService.listBankAccountsByOwnerId(UUID.fromString(ownerId))
+    @GetMapping("/owner/{userId}")
+    public ResponseEntity<List<BankAccountResponseDTO>> listBankAccountsByUserId(@PathVariable("userId") String userId) {
+        List<BankAccountResponseDTO> accounts = bankAccountService.listBankAccountsByUserId(UUID.fromString(userId))
                 .stream()
                 .map(BankAccountResponseDTO::new)
                 .toList();

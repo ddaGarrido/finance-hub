@@ -21,17 +21,17 @@ public class BankAccountService {
     private final UserRepository userRepository;
 
     public BankAccount createBankAccount(BankAccountRegisterDTO bankAccountDTO) {
-        Optional<User> owner = userRepository.findById(UUID.fromString(bankAccountDTO.getOwnerId()));
+        Optional<User> owner = userRepository.findById(UUID.fromString(bankAccountDTO.getUserId()));
 
         if (owner.isEmpty()) {
             throw new NotFoundException("Owner not found");
         }
 
         BankAccount newAccount = bankAccountDTO.toEntity();
-        List<BankAccount> existingAccounts = bankAccountRepository.findByOwnerId(owner.get().getId());
+        List<BankAccount> existingAccounts = bankAccountRepository.findByUserId(owner.get().getId());
         existingAccounts.add(newAccount);
 
-        bankAccountRepository.save(newAccount);
+        newAccount = bankAccountRepository.save(newAccount);
 
         return newAccount;
     }
@@ -44,9 +44,9 @@ public class BankAccountService {
         return bankAccountRepository.findAll();
     }
 
-    public List<BankAccount> listBankAccountsByOwnerId(UUID ownerId) {
+    public List<BankAccount> listBankAccountsByUserId(UUID userId) {
         // Check if owner exists
-        userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("Owner not found"));
-        return bankAccountRepository.findByOwnerId(ownerId);
+        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
+        return bankAccountRepository.findByUserId(userId);
     }
 }

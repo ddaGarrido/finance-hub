@@ -35,14 +35,13 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
         List<BankAccount> bankAccounts = List.of(); // Initialize with empty list
         User newUser = new User();
-        newUser.setId(UUID.randomUUID());
         newUser.setUsername(userDTO.getUsername());
         newUser.setPassword(hashedPassword);
         newUser.setEmail(userDTO.getEmail());
         newUser.setName(userDTO.getName());
         newUser.setRole(userDTO.getRole());
 
-        userRepository.save(newUser);
+        newUser = userRepository.save(newUser);
 
         return newUser;
     }

@@ -12,13 +12,13 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "bank_accounts", schema = "bank_accounts_mgmt")
+@Table(name = "bank_accounts", schema = "bank_accounts")
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
 public class BankAccount extends DBEntity{
 
     @Column(nullable = false)
-    private UUID ownerId;
+    private UUID userId;
 
     @Column(nullable = false, length = 120)
     private String accountName;
@@ -29,12 +29,21 @@ public class BankAccount extends DBEntity{
     @Column(nullable = false, length = 9)
     private String accountRouting;
 
+    @Column(nullable = false, length = 10)
+    private String accountType;
+
     @Column(nullable = false, length = 120)
-    private String bankName;
+    private String institutionName;
+
+    @Column(nullable = false, length = 120)
+    private String holderName;
 
     @Column(nullable = false)
     private BigDecimal balance;
 
     @Column(nullable = false, length = 3)
     private String currency;
+
+    @Column(nullable = false)
+    private Boolean active;
 }

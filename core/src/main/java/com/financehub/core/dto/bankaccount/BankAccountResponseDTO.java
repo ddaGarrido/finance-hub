@@ -9,22 +9,28 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @NoArgsConstructor
 public class BankAccountResponseDTO {
     private String id;
-    private String ownerId;
+    private String userId;
     private String accountName;
     private String accountNumber;
     private String accountRouting;
-    private String bankName;
+    private String accountType;
+    private String institutionName;
+    private String holderName;
     private String balance;
     private String currency;
+    private Boolean active;
 
     public BankAccountResponseDTO(BankAccount account) {
         this.id = account.getId().toString();
-        this.ownerId = account.getOwnerId().toString();
+        this.userId = account.getUserId().toString();
         this.accountName = account.getAccountName();
         this.accountNumber = account.getAccountNumber();
         this.accountRouting = account.getAccountRouting();
-        this.bankName = account.getBankName();
+        this.accountType = account.getAccountType();
+        this.institutionName = account.getInstitutionName();
+        this.holderName = account.getHolderName();
         this.balance = account.getBalance().toString();
         this.currency = account.getCurrency();
+        this.active = account.getActive();
     }
 }
