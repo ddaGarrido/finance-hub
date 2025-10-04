@@ -1,6 +1,6 @@
-package com.financehub.core.dto.bankaccount;
+package com.financehub.bankaccounts.dto;
 
-import com.financehub.core.model.BankAccount;
+import com.financehub.bankaccounts.model.BankAccount;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

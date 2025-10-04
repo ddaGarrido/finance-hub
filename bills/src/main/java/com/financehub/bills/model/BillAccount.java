@@ -1,5 +1,6 @@
-package com.financehub.core.model;
+package com.financehub.bills.model;
 
+import com.financehub.core.model.DBEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -14,7 +15,7 @@ import java.util.UUID;
 @Table(name = "bill_accounts", schema = "bills")
 @AllArgsConstructor @NoArgsConstructor
 @Getter @Setter
-public class BillAccount extends DBEntity{
+public class BillAccount extends DBEntity {
 
     @Column(nullable = false)
     private UUID userId;

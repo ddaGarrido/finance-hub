@@ -3,7 +3,6 @@ package com.financehub.core.service;
 import com.financehub.core.dto.user.UserRegisterDTO;
 import com.financehub.core.error.ConflictException;
 import com.financehub.core.error.NotFoundException;
-import com.financehub.core.model.BankAccount;
 import com.financehub.core.model.User;
 import com.financehub.core.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -33,7 +32,6 @@ public class UserService {
         }
 
         String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
-        List<BankAccount> bankAccounts = List.of(); // Initialize with empty list
         User newUser = new User();
         newUser.setUsername(userDTO.getUsername());
         newUser.setPassword(hashedPassword);

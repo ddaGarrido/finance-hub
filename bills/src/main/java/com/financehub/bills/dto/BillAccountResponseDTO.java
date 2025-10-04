@@ -1,13 +1,9 @@
 package com.financehub.bills.dto;
 
-import com.financehub.core.dto.bankaccount.BankAccountResponseDTO;
-import com.financehub.core.model.BillAccount;
-import jakarta.validation.constraints.NotBlank;
+import com.financehub.bills.model.BillAccount;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor @NoArgsConstructor

@@ -1,9 +1,9 @@
 package com.financehub.bankaccounts.controller;
 
 import com.financehub.bankaccounts.service.BankAccountService;
-import com.financehub.core.dto.bankaccount.BankAccountRegisterDTO;
-import com.financehub.core.dto.bankaccount.BankAccountResponseDTO;
-import com.financehub.core.model.BankAccount;
+import com.financehub.bankaccounts.dto.BankAccountRegisterDTO;
+import com.financehub.bankaccounts.dto.BankAccountResponseDTO;
+import com.financehub.bankaccounts.model.BankAccount;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;

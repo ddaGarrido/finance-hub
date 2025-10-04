@@ -3,7 +3,7 @@ package com.financehub.bills.service;
 import com.financehub.bills.dto.BillAccountRegisterDTO;
 import com.financehub.bills.repository.BillAccountRepository;
 import com.financehub.core.error.NotFoundException;
-import com.financehub.core.model.BillAccount;
+import com.financehub.bills.model.BillAccount;
 import com.financehub.core.model.User;
 import com.financehub.core.repository.UserRepository;
 import lombok.AllArgsConstructor;

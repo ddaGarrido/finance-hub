@@ -1,9 +1,9 @@
 package com.financehub.bankaccounts.service;
 
 import com.financehub.bankaccounts.repository.BankAccountRepository;
-import com.financehub.core.dto.bankaccount.BankAccountRegisterDTO;
+import com.financehub.bankaccounts.dto.BankAccountRegisterDTO;
 import com.financehub.core.error.NotFoundException;
-import com.financehub.core.model.BankAccount;
+import com.financehub.bankaccounts.model.BankAccount;
 import com.financehub.core.model.User;
 import com.financehub.core.repository.UserRepository;
 import lombok.AllArgsConstructor;
