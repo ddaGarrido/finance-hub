@@ -1,4 +1,4 @@
-package com.financehub.bills.dto;
+package com.financehub.bills.dto.billaccount;
 
 import com.financehub.bills.model.BillAccount;
 import jakarta.validation.constraints.NotBlank;

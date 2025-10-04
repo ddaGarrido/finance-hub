@@ -2,7 +2,7 @@
 -- This includes common utility and subscription providers in Brazil
 INSERT INTO bills.bill_institutions (provider_key, display_name, category, website_url, login_url, supports_webhook, active)
 VALUES
-  ('enel-sp',  'Enel São Paulo',     'ELECTRICITY', 'https://www.enel.com.br',     'https://www.enel.com.br/pt-saopaulo', false, true),
+  ('enel',  'Enel',     'ELECTRICITY', 'https://www.enel.com.br',     'https://www.enel.com.br', false, true),
   ('sabesp',   'SABESP',             'WATER',       'https://www.sabesp.com.br',   'https://agenciavirtual.sabesp.com.br', false, true),
   ('vivo',     'Vivo',               'TELECOM',     'https://www.vivo.com.br',     'https://login.vivo.com.br', false, true),
   ('claro',    'Claro',              'INTERNET',    'https://www.claro.com.br',    'https://minhaclaro.claro.com.br', false, true),

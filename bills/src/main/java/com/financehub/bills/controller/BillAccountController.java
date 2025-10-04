@@ -1,7 +1,7 @@
 package com.financehub.bills.controller;
 
-import com.financehub.bills.dto.BillAccountRegisterDTO;
-import com.financehub.bills.dto.BillAccountResponseDTO;
+import com.financehub.bills.dto.billaccount.BillAccountRegisterDTO;
+import com.financehub.bills.dto.billaccount.BillAccountResponseDTO;
 import com.financehub.bills.service.BillAccountService;
 import com.financehub.bills.model.BillAccount;
 import jakarta.validation.Valid;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/bill-accounts")
+@RequestMapping("/api/bills/accounts")
 @AllArgsConstructor
 public class BillAccountController {
 
