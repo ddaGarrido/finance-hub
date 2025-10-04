@@ -1,0 +1,10 @@
+spring:
+  config:
+    import: optional:classpath:application-base.yml
+  jpa:
+    properties:
+      hibernate:
+        default_schema: ${BILLS_SCHEMA}
+  flyway:
+    enabled: ${BILLS_FLYWAY_ENABLED}
+    schemas: ${BILLS_SCHEMA}

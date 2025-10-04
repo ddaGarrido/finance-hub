@@ -10,12 +10,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.financehub.core",
         "com.financehub.usermanagement",
         "com.financehub.bankaccounts",
+        "com.financehub.bills"
 })
-@EntityScan(basePackages = {"com.financehub.core.model"})
+@EntityScan(basePackages = {
+        "com.financehub.core.model",
+        "com.financehub.bills.dto",
+})
 @EnableJpaRepositories(basePackages = {
         "com.financehub.core.repository",
         "com.financehub.usermanagement.repository",
-        "com.financehub.bankaccounts.repository"
+        "com.financehub.bankaccounts.repository",
+        "com.financehub.bills.repository"
 })
 public class FinanceHubApplication {
 

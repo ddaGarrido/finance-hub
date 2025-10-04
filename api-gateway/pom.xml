@@ -43,6 +43,11 @@
             <artifactId>bank-accounts</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.financehub</groupId>
+            <artifactId>bills</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>

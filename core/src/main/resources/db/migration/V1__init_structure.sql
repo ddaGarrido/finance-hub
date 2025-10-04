@@ -40,3 +40,20 @@ CREATE TABLE bank_accounts.bank_accounts (
 
 --CREATE UNIQUE INDEX IF NOT EXISTS ux_bank_accounts_owner_key ON bank_accounts.bank_accounts(user_id, bank_code, branch, account_number);
 --CREATE INDEX IF NOT EXISTS ix_bank_accounts_user ON bank_accounts.bank_accounts(user_id);
+
+
+-- Create Bill Management Schema and bills table
+DROP SCHEMA IF EXISTS bills CASCADE;
+CREATE SCHEMA bills;
+
+CREATE TABLE bills.bill_accounts (
+  id UUID PRIMARY KEY,
+  user_id UUID NOT NULL,
+  bill_account_name VARCHAR(120) NOT NULL,
+  bill_institution_name VARCHAR(120) NOT NULL,
+  bill_username VARCHAR(120) NOT NULL,
+  bill_password VARCHAR(120) NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
