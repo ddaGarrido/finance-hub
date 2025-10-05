@@ -8,6 +8,7 @@ import org.apache.http.client.methods.*;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.stereotype.Component;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -16,10 +17,10 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
+public class Client {
 
-public class Client implements Closeable {
-
-    private CloseableHttpClient httpClient;
+    private final CloseableHttpClient httpClient;
     private boolean test;
     private boolean createdHttpClient;
 
@@ -45,11 +46,6 @@ public class Client implements Closeable {
     }
     //</editor-fold>
 
-    @Override
-    public void close() throws IOException {
-        this.httpClient.close();
-    }
-
     //<editor-fold desc="Execution Handlers">
     private Response executeHttpCall(HttpRequestBase httpRequest) throws IOException {
         try {
@@ -57,10 +53,6 @@ public class Client implements Closeable {
             return this.getResponse(response);
         } catch (IOException e) {
             throw new IOException(e.getMessage());
-        } finally {
-            if (this.createdHttpClient && !this.test) {
-                this.httpClient.close();
-            }
         }
     }
 
