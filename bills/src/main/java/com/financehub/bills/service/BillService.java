@@ -1,8 +1,6 @@
 package com.financehub.bills.service;
 
 import com.financehub.bills.model.Bill;
-import com.financehub.bills.model.BillInstitution;
-import com.financehub.bills.repository.BillInstitutionRepository;
 import com.financehub.bills.repository.BillRepository;
 import com.financehub.core.error.NotFoundException;
 import com.financehub.core.repository.UserRepository;

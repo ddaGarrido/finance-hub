@@ -6,10 +6,8 @@ import com.financehub.core.http.Http;
 import java.net.URI;
 
 public interface Institution {
-
     String getId();
     String getDisplayName();
-
     URI getWebsiteUrl();
     URI getLoginUrl();
 

@@ -35,7 +35,8 @@ public abstract class AbstractInstitution implements Institution {
             this.loginUrl = this.websiteUrl.resolve(this.loginPath);
         }
     }
-    public static record Config(String id, String displayName, String baseUrl, String loginPath, String loginUrl) {}
+
+    public record Config(String id, String displayName, String baseUrl, String loginPath, String loginUrl) {}
 
     // ---------- Institution getters ----------
     @Override public String getId() { return id; }

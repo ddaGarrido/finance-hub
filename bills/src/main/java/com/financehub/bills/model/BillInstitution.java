@@ -13,8 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Entity
 @Table(name = "bill_institutions", schema = "bills")
 @AllArgsConstructor @NoArgsConstructor
@@ -35,10 +33,10 @@ public class BillInstitution extends DBEntity {
     @Column(nullable = false, length = 32)
     private String category;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String websiteUrl;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String loginUrl;
 
     @Column(nullable = false)
