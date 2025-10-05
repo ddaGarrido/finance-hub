@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -33,14 +33,21 @@ public class BillService {
 //        return newAccount;
 //    }
 
-    public Bill getBillAccountById(UUID id) {
-        return billRepository.findById(id).orElseThrow(() -> new NotFoundException("Bill not found"));
+    public Bill getBillAccountById(String id) {
+        Optional<Bill> bill = billRepository.findById(Long.valueOf(id));
+
+        if (bill.isEmpty()) {
+            throw new NotFoundException("Bill not found");
+        }
+        return bill.get();
     }
 
-    public List<Bill> listBillAccountsByUserId(UUID userId) {
-        // Check if owner exists
-        userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Owner not found"));
-        // Assuming BillAccount has a userId field and a corresponding method in the repository
-        return billRepository.findByUserId(userId);
+    public List<Bill> listBillAccountsByUserId(String userId) {
+        List<Bill> bills = billRepository.findByUserId(Long.valueOf(userId));
+
+        if (bills.isEmpty()) {
+            throw new NotFoundException("No bills found for the given user ID");
+        }
+        return bills;
     }
 }

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public class BillInstitutionResponseDTO {
 
     private String id;
-    private String providerKey;
-    private String displayName;
+    private String institutionKey;
+    private String institutionName;
     private String category;
     private String websiteUrl;
     private String loginUrl;
@@ -21,8 +21,8 @@ public class BillInstitutionResponseDTO {
 
     public BillInstitutionResponseDTO(BillInstitution billInstitution) {
         this.id = billInstitution.getId().toString();
-        this.providerKey = billInstitution.getProviderKey();
-        this.displayName = billInstitution.getDisplayName();
+        this.institutionKey = billInstitution.getInstitutionKey();
+        this.institutionName = billInstitution.getInstitutionName();
         this.category = billInstitution.getCategory();
         this.websiteUrl = billInstitution.getWebsiteUrl();
         this.loginUrl = billInstitution.getLoginUrl();

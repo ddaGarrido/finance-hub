@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/bills/accounts")
@@ -34,14 +33,14 @@ public class BillAccountController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BillAccountResponseDTO> getBillAccountById(@PathVariable("id") String id) {
-        BillAccount account = billAccountService.getBillAccountById(UUID.fromString(id));
+        BillAccount account = billAccountService.getBillAccountById(id);
 
         return ResponseEntity.ok(new BillAccountResponseDTO(account));
     }
 
     @GetMapping("/owner/{userId}")
     public ResponseEntity<List<BillAccountResponseDTO>> listBillAccountsByUserId(@PathVariable("userId") String userId) {
-        List<BillAccountResponseDTO> accounts = billAccountService.listBillAccountsByUserId(UUID.fromString(userId))
+        List<BillAccountResponseDTO> accounts = billAccountService.listBillAccountsByUserId(userId)
                 .stream()
                 .map(BillAccountResponseDTO::new)
                 .toList();

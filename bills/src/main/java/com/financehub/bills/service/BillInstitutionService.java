@@ -1,14 +1,19 @@
 package com.financehub.bills.service;
 
+import com.financehub.bills.connector.HealthCheckResult;
+import com.financehub.bills.connector.institution.config.Institution;
+import com.financehub.bills.connector.InstitutionCheckReport;
+import com.financehub.bills.connector.institution.config.InstitutionFactory;
 import com.financehub.bills.model.BillInstitution;
 import com.financehub.bills.repository.BillInstitutionRepository;
 import com.financehub.core.error.NotFoundException;
+import com.financehub.core.http.Http;
 import com.financehub.core.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -17,31 +22,44 @@ public class BillInstitutionService {
     private final BillInstitutionRepository billInstitutionRepository;
     private final UserRepository userRepository;
 
-//    public BillAccount createBillAccount(BillAccountRegisterDTO billAccountDTO) {
-//        Optional<User> owner = userRepository.findById(UUID.fromString(billAccountDTO.getUserId()));
-//
-//        if (owner.isEmpty()) {
-//            throw new NotFoundException("Owner not found");
-//        }
-//
-//        BillAccount newAccount = billAccountDTO.toEntity();
-//
-//        newAccount = billAccountRepository.save(newAccount);
-//
-//        return newAccount;
-//    }
+    public List<InstitutionCheckReport> healthCheckAllActive() {
+        List<BillInstitution> institutions = billInstitutionRepository.findAllByActiveTrue();
+
+        return institutions.stream().map(this::buildReport).toList();
+    }
+    public InstitutionCheckReport institutionCheckReport(String idOrKey) {
+        BillInstitution bi = getBillInstitutionByIdOrKey(idOrKey);
+
+        return buildReport(bi);
+    }
+
+    private InstitutionCheckReport buildReport(BillInstitution bi) {
+        Institution inst = InstitutionFactory.from(bi);
+        Http http = new Http();
+
+        HealthCheckResult site  = inst.checkWebsite(http);
+        HealthCheckResult login = inst.checkLogin(http);
+
+        return InstitutionCheckReport.builder()
+            .institutionId(inst.getId())
+            .displayName(inst.getDisplayName())
+            .websiteCheck(site)
+            .loginCheck(login)
+            .build();
+    }
+
+    public List<BillInstitution> listAllBillInstitutions() {
+        return billInstitutionRepository.findAll();
+    }
 
     public BillInstitution getBillInstitutionByIdOrKey(String id) {
-        BillInstitution institution = null;
-        try {
-            institution = billInstitutionRepository.findById(UUID.fromString(id))
-                    .orElse(null);
-        } catch (Exception e) {
-            institution = billInstitutionRepository.findByProviderKey(id.toLowerCase());
-            if (institution == null) {
-                throw new NotFoundException("Bill institution not found");
-            }
-        }
-        return institution;
+        Optional<BillInstitution> bi;
+
+        bi = Optional.ofNullable(billInstitutionRepository.findByInstitutionKey(id));
+        if (bi.isPresent()) return bi.get();
+        bi = billInstitutionRepository.findById(Long.valueOf(id));
+        if (bi.isPresent()) return bi.get();
+
+        throw new NotFoundException("Bill institution not found");
     }
 }

@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor @NoArgsConstructor
@@ -15,6 +14,8 @@ public class BankAccountRegisterDTO {
 
     @NotBlank(message = "User ID is required")
     private String userId;
+    @NotBlank(message = "Bank Id is required")
+    private String bankInstitutionId;
     @NotBlank(message = "Account Name is required")
     private String accountName;
     @NotBlank(message = "Account Number is required")
@@ -23,8 +24,6 @@ public class BankAccountRegisterDTO {
     private String accountRouting;
     @NotBlank(message = "Account Type is required")
     private String accountType;
-    @NotBlank(message = "Institution Name is required")
-    private String institutionName;
     @NotBlank(message = "Holder Name is required")
     private String holderName;
     @NotBlank(message = "Currency is required")
@@ -32,12 +31,11 @@ public class BankAccountRegisterDTO {
 
     public BankAccount toEntity() {
         BankAccount account = new BankAccount();
-        account.setUserId(UUID.fromString(this.userId));
-        account.setAccountName(this.accountName);
-        account.setAccountNumber(this.accountNumber);
-        account.setAccountRouting(this.accountRouting);
-        account.setAccountType(this.accountType);
-        account.setInstitutionName(this.institutionName);
+        account.setUserId(Long.valueOf(this.userId));
+        account.setName(this.accountName);
+        account.setNumber(this.accountNumber);
+        account.setRouting(this.accountRouting);
+        account.setType(this.accountType);
         account.setHolderName(this.holderName);
         account.setBalance(BigDecimal.ZERO); // Initial balance set to zero
         account.setCurrency(this.currency);

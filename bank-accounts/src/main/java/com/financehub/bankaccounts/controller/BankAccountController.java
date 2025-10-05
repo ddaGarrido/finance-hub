@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/bank-accounts")
@@ -28,14 +27,14 @@ public class BankAccountController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BankAccountResponseDTO> getBankAccountById(@PathVariable("id") String id) {
-        BankAccount account = bankAccountService.getBankAccountById(UUID.fromString(id));
+        BankAccount account = bankAccountService.getBankAccountById(id);
 
         return ResponseEntity.ok(new BankAccountResponseDTO(account));
     }
 
     @GetMapping("/owner/{userId}")
     public ResponseEntity<List<BankAccountResponseDTO>> listBankAccountsByUserId(@PathVariable("userId") String userId) {
-        List<BankAccountResponseDTO> accounts = bankAccountService.listBankAccountsByUserId(UUID.fromString(userId))
+        List<BankAccountResponseDTO> accounts = bankAccountService.listBankAccountsByUserId(userId)
                 .stream()
                 .map(BankAccountResponseDTO::new)
                 .toList();

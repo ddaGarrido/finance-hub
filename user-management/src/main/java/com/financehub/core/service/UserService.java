@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +49,7 @@ public class UserService {
     }
 
     public User getUserById(String id) {
-        Optional<User> user = userRepository.findById(UUID.fromString(id));
+        Optional<User> user = userRepository.findById(Long.valueOf(id));
 
         if (user.isEmpty()) {
             throw new NotFoundException("User not found");

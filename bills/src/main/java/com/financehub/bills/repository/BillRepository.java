@@ -4,9 +4,8 @@ import com.financehub.bills.model.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.UUID;
 
-public interface BillRepository extends JpaRepository<Bill, UUID> {
+public interface BillRepository extends JpaRepository<Bill, Long> {
 
-    List<Bill> findByUserId(UUID userId);
+    List<Bill> findByUserId(Long userId);
 }

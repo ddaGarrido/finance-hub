@@ -4,6 +4,10 @@ import com.financehub.core.model.DBEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,11 +21,16 @@ import java.util.UUID;
 @Getter @Setter
 public class BillInstitution extends DBEntity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bill_institutions_id_seq")
+    @SequenceGenerator(name = "bill_institutions_id_seq", sequenceName = "bills.bill_institutions_id_seq", allocationSize = 1)
+    private Long id;
+
     @Column(nullable = false, length = 80)
-    private String providerKey;
+    private String institutionKey;
 
     @Column(nullable = false, length = 120)
-    private String displayName;
+    private String institutionName;
 
     @Column(nullable = false, length = 32)
     private String category;

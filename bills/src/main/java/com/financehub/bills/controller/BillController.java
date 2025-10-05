@@ -1,10 +1,7 @@
 package com.financehub.bills.controller;
 
 import com.financehub.bills.dto.bill.BillResponseDTO;
-import com.financehub.bills.dto.billinstitution.BillInstitutionResponseDTO;
 import com.financehub.bills.model.Bill;
-import com.financehub.bills.model.BillInstitution;
-import com.financehub.bills.service.BillInstitutionService;
 import com.financehub.bills.service.BillService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/bills/bill")
@@ -38,14 +34,14 @@ public class BillController {
 
     @GetMapping("/{id}")
     public ResponseEntity<BillResponseDTO> getBillAccountById(@PathVariable("id") String id) {
-        Bill bill = billService.getBillAccountById(UUID.fromString(id));
+        Bill bill = billService.getBillAccountById(id);
 
         return ResponseEntity.ok(new BillResponseDTO(bill));
     }
 
     @GetMapping("/owner/{userId}")
     public ResponseEntity<List<BillResponseDTO>> listBillAccountsByUserId(@PathVariable("userId") String userId) {
-        List<BillResponseDTO> bills = billService.listBillAccountsByUserId(UUID.fromString(userId))
+        List<BillResponseDTO> bills = billService.listBillAccountsByUserId(userId)
                 .stream()
                 .map(BillResponseDTO::new)
                 .toList();

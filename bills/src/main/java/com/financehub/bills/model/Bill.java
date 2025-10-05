@@ -3,18 +3,19 @@ package com.financehub.bills.model;
 import com.financehub.core.model.DBEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Type;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Table(name = "bills", schema = "bills")
@@ -22,14 +23,19 @@ import java.util.UUID;
 @Getter @Setter
 public class Bill extends DBEntity {
 
-    @Column(nullable = false)
-    private UUID userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bills_id_seq")
+    @SequenceGenerator(name = "bills_id_seq", sequenceName = "bills.bills_id_seq", allocationSize = 1)
+    private Long id;
 
-//    @Column(nullable = false)
-    private UUID accountId;
+    @Column(nullable = false)
+    private Long billInstitutionId;
 
     @Column(nullable = false)
-    private UUID institutionId;
+    private Long userId;
+
+    @Column(nullable = false)
+    private Long billAccountId;
 
     @Column(nullable = false, length = 20)
     private String type;
@@ -45,18 +51,6 @@ public class Bill extends DBEntity {
 
     @Column(nullable = false, columnDefinition = "TIMESTAMPTZ")
     private ZonedDateTime paidAt;
-
-    @Column(nullable = false, length = 64)
-    private String barcode;
-
-    @Column(nullable = false, length = 120)
-    private String beneficiaryName;
-
-    @Column(nullable = false, length = 20)
-    private String beneficiaryTaxId;
-
-    @Column(nullable = false, length = 20)
-    private String payerTaxId;
 
     @Column(nullable = false, precision = 19, scale = 4)
     private BigDecimal amount;

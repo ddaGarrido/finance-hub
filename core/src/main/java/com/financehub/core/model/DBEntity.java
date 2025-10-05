@@ -5,14 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 @MappedSuperclass
 @Getter @Setter
 public abstract class DBEntity {
-
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
 
     @Column(nullable = false, updatable = false)
     private OffsetDateTime createdAt;
