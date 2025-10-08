@@ -1,6 +1,8 @@
 spring:
   config:
     import: optional:classpath:application-base.yml
+  application:
+    name: user-management
   jpa:
     properties:
       hibernate:
@@ -8,3 +10,15 @@ spring:
   flyway:
     enabled: ${UMS_FLYWAY_ENABLED}
     schemas: ${UMS_SCHEMA}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus #,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized #never
+  metrics:
+    tags:
+      application: ${spring.application.name}

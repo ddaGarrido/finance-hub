@@ -1,6 +1,8 @@
 spring:
   config:
     import: optional:classpath:application-base.yml
+  application:
+      name: api-gateway
   flyway:
     enabled: false
 application:
@@ -10,4 +12,20 @@ application:
       expiration: ${JWT_EXPIRATION}
 server:
   port: ${HTTP_PORT}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus #,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized #never
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    #if p95/99 later
+#    distribution:
+#      percentiles-histogram:
+#        http.server.requests: true
 

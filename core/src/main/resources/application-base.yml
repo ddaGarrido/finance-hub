@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: finance-hub
   datasource:
     url: ${PG_URL}
     username: ${PG_USER}
@@ -16,3 +18,15 @@ spring:
       baseline-on-migrate: true
 server:
   port: ${HTTP_PORT}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: ${spring.application.name}
