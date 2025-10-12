@@ -1,0 +1,22 @@
+name: Guard: only dev→main
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  enforce-dev-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate PR source branch
+        run: |
+          SRC="${{ github.head_ref }}"
+          if [[ ! "$SRC" =~ ^dev(|\/.+)$ ]]; then
+            echo "Only PRs from 'dev' or 'dev/*' branches can be merged into 'main'. Current source: '$SRC'."
+            exit 1
+          fi
+      - name: Success
+        run: echo "Source branch '$SRC' is allowed."
