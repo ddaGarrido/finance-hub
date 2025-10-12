@@ -4,7 +4,7 @@ spring:
   application:
       name: api-gateway
   flyway:
-    enabled: false
+    enabled: false #no db here
 application:
   security:
     jwt:
