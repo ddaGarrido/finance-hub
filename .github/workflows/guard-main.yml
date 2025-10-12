@@ -1,0 +1,49 @@
+name: Guard main (only dev→main + approval)
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
+  pull_request_review:
+    types: [ submitted, dismissed ]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  only-dev-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce dev or dev/* as source
+        run: |
+          SRC="${{ github.head_ref || github.event.pull_request.head.ref || '' }}"
+          echo "Source branch: $SRC"
+          if [[ ! "$SRC" =~ ^dev(|/.*)$ ]]; then
+            echo "::error::Only PRs from 'dev' or 'dev/*' branches can be merged into 'main'."; exit 1;
+          fi
+          echo "✓ Source OK"
+
+  approval-required:
+    runs-on: ubuntu-latest
+    needs: [ only-dev-source ]
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Check approvals
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              core.setFailed("No pull_request in context."); return;
+            }
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              per_page: 100
+            });
+            const approved = reviews.some(r => r.state === "APPROVED");
+            core.info(`Found ${reviews.length} reviews. Approved? ${approved}`);
+            if (!approved) core.setFailed("At least one approval is required.");

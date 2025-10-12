@@ -1,0 +1,91 @@
+name: PR to dev (validate name, build, tests, approval)
+
+on:
+  pull_request:
+    branches: [ "dev" ]
+    types: [ opened, reopened, synchronize, ready_for_review ]
+  pull_request_review:
+    types: [ submitted, dismissed ]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: pr-dev-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  name-and-title:
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch and PR title (FH-123*)
+        run: |
+          BRANCH="${{ github.head_ref || github.event.pull_request.head.ref || '' }}"
+          TITLE="${{ github.event.pull_request.title || '' }}"
+          echo "Branch: $BRANCH"
+          echo "Title : $TITLE"
+          re_branch='(^|.*/)FH-[0-9]+([_-].*)?$'
+          re_title='^FH-[0-9]+.*'
+          [[ "$BRANCH" =~ $re_branch ]] || { echo "::error::Branch must contain a JIRA key (e.g., FH-123 or feature/FH-123-text)."; exit 1; }
+          [[ "$TITLE"  =~ $re_title  ]] || { echo "::error::PR title must start with a JIRA key (e.g., FH-123: Summary)."; exit 1; }
+          echo "✓ Naming OK"
+
+  build:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: [ name-and-title ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Build (skip tests)
+        run: mvn -B -ntp -DskipTests package
+
+  tests:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: [ build ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Run tests
+        run: mvn -B -ntp -e test
+      - name: Upload surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: '**/target/surefire-reports/*'
+
+  approval-required:
+    name: Require at least one approval
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Check approvals
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (!pr) {
+              core.setFailed("No pull_request in context."); return;
+            }
+            const { data: reviews } = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: pr.number,
+              per_page: 100
+            });
+            const approved = reviews.some(r => r.state === "APPROVED");
+            core.info(`Found ${reviews.length} reviews. Approved? ${approved}`);
+            if (!approved) core.setFailed("At least one approval is required.");
