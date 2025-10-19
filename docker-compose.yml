@@ -52,7 +52,7 @@ services:
     ports:
       - "3000:3000"
     networks: [ monitoring ]
-    depends_on: [ prometheus ] #, loki, tempo ]
+    depends_on: [ prometheus, loki, tempo ]
     volumes:
       - grafana_data:/var/lib/grafana
       - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
